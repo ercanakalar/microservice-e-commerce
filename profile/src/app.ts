@@ -7,6 +7,8 @@ import cors from 'cors';
 import { NotFoundError } from './errors';
 import { errorHandler } from './middlewares';
 
+import { profileRouter } from './routes/profileRouter';
+
 const app: Express = express();
 
 app.set('trust proxy', true);
@@ -19,6 +21,9 @@ app.use(
   })
 );
 app.use(cors());
+
+app.use('/api/profile', profileRouter);
+
 
 app.all('*', async () => {
   throw new NotFoundError();
