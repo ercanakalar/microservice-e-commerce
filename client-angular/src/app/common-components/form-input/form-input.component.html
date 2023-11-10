@@ -1,0 +1,17 @@
+<label [for]="inputId"> {{ labelName }}</label>
+<div class="flex relative w-full group">
+  <div
+    class="flex justify-start items-center group-focus-within:text-indigo-600 transition-colors"
+  >
+    <i class="absolute p-2" [ngClass]="icon"></i>
+  </div>
+  <input
+    [type]="type"
+    [id]="inputId"
+    [name]="inputId"
+    [placeholder]="placeHolder"
+    class="input p-3 pl-9 w-full"
+    (input)="onChangeInput($event)"
+  />
+  <div class="focus-input"></div>
+</div>

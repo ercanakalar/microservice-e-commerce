@@ -1,0 +1,35 @@
+.wrap-button {
+    display: block;
+    position: relative;
+    width: 100%;
+    border-radius: 25px;
+    z-index: 1;
+    overflow: hidden;
+  
+    box-shadow: 0 5px 30px 0px rgba(3, 216, 222, 0.2);
+  }
+  .button-bg {
+    position: absolute;
+    z-index: -1;
+    width: 300%;
+    height: 100%;
+    background: linear-gradient(to right, #00dbde, #fc00ff, #00dbde, #fc00ff);
+    left: -100%;
+  
+    transition: all 0.4s;
+  }
+  .wrap-button:hover .button-bg {
+    left: 0;
+  }
+  
+  @media (min-height: 1129px) {
+    .signIn-card {
+      padding: 170px;
+    }
+  }
+  @media (max-height: 918px) {
+    .signIn-card {
+      padding: 0;
+    }
+  }
+  
