@@ -16,8 +16,8 @@ const start = async () => {
   }
 };
 
-app.listen(3001, () => {
-  console.log('Listening Auth Server on port 3001');
+app.listen(3000, () => {
+  console.log('Listening Profile Server on port 3000');
 });
 
 start();

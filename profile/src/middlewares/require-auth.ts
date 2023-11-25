@@ -8,7 +8,7 @@ export const requireAuth = (
   res: Response,
   next: NextFunction
 ) => {
-  if (req.currentUser == undefined) {
+  if (req.currentProfile == undefined) {
     throw new NotAuthorizedError();
   }
 

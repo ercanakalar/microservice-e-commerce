@@ -1,13 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
-import { UserPayload } from '../types/userPayload';
+import { ProfilePayload } from '../types';
 import { BadRequestError } from '../errors';
 
 declare global {
   namespace Express {
     interface Request {
-      currentUser?: UserPayload;
+      currentProfile?: ProfilePayload;
     }
   }
 }
@@ -25,9 +25,9 @@ export const currentUserMiddleware = async (
     const payload = jwt.verify(
       req.session.jwt,
       process.env.JWT_KEY!
-    ) as UserPayload;
+    ) as ProfilePayload;
 
-    req.currentUser = payload;
+    req.currentProfile = payload;
 
     next();
   } catch (error) {}
