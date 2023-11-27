@@ -5,6 +5,7 @@ export interface ProfileAttrs {
   lastName: string;
   email: string;
   photo: string;
+  active: boolean;
 }
 
 export interface ProfileModal extends mongoose.Model<ProfileDoc> {
