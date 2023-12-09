@@ -17,7 +17,7 @@ spec:
           image: ercanakalar/auth
           env:
             - name: MONGO_URI
-              value: 'mongodb://auth-mongo-srv:27017/auth'
+              value: "mongodb+srv://ea:ea123@assessment.vxer5fo.mongodb.net/auth"
             - name: JWT_KEY
               valueFrom:
                 secretKeyRef:
