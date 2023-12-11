@@ -22,7 +22,7 @@ const SignupPage = (props: any) => {
                 type='text'
                 placeHolder='First Name'
                 labelName='First Name'
-                icon='fas fa-user'
+                icon='/icons/user.svg'
                 onChangeInput={changeInputHandler}
               />
               <FormInput
@@ -30,7 +30,7 @@ const SignupPage = (props: any) => {
                 type='text'
                 placeHolder='Last Name'
                 labelName='Last Name'
-                icon='fas fa-user'
+                icon='/icons/user.svg'
                 onChangeInput={changeInputHandler}
               />
             </div>
@@ -39,7 +39,7 @@ const SignupPage = (props: any) => {
               type='email'
               placeHolder='E-mail'
               labelName='E-mail'
-              icon='fas fa-user'
+              icon='/icons/email.svg'
               onChangeInput={changeInputHandler}
             />
             <FormInput
@@ -47,7 +47,7 @@ const SignupPage = (props: any) => {
               type='password'
               placeHolder='Password'
               labelName='Password'
-              icon='fas fa-lock'
+              icon='/icons/lock.svg'
               onChangeInput={changeInputHandler}
             />
             <FormInput
@@ -55,7 +55,7 @@ const SignupPage = (props: any) => {
               type='password'
               placeHolder='Confirm Password'
               labelName='Confirm Password'
-              icon='fas fa-lock'
+              icon='/icons/lock.svg'
               onChangeInput={changeInputHandler}
             />
           </div>

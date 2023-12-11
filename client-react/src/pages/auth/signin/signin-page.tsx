@@ -24,7 +24,7 @@ const SigninPage = (props: any) => {
                 type='email'
                 placeHolder='E-mail'
                 labelName='Email'
-                src='public/icons/user.svg'
+                icon='/icons/user.svg'
                 onChangeInput={changeInputHandler}
               />
             </div>
@@ -34,7 +34,7 @@ const SigninPage = (props: any) => {
                 type='password'
                 placeHolder='Password'
                 labelName='Password'
-                src='public/icons/lock.svg'
+                icon='/icons/lock.svg'
                 onChangeInput={changeInputHandler}
               />
             </div>

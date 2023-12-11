@@ -10,7 +10,7 @@ const FormInput = (props: any) => {
       <div className='flex relative w-full group'>
         <div className='flex justify-start items-center group-focus-within:text-indigo-600 transition-colors'>
           {/* <img src={src} alt={inputId} /> */}
-          <i className={'absolute p-2' + icon} ></i>
+          <img src={icon} className='absolute p-2' alt={inputId} />
         </div>
         <input
           className='input p-3 pl-9 w-full'
