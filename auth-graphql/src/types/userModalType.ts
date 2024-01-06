@@ -1,31 +1,27 @@
-import mongoose from 'mongoose';
+import { ID } from 'graphql-ws';
 
-export interface UserAttrs {
+export type User = {
+  id: ID;
+  firstName: string;
+  lastName: string;
+  email: string;
+};
+
+export type UserSignIn = {
+  email: string;
+  password: string;
+};
+
+export type UserSignUp = {
   firstName: string;
   lastName: string;
   email: string;
   password: string;
   confirmPassword: string;
-  passwordResetToken?: string | undefined;
-  passwordResetExpires?: Date | undefined;
-  passwordChangedAt?: Date | undefined;
-}
+};
 
-export interface UserModal extends mongoose.Model<UserDoc> {
-  build(attrs: UserAttrs): UserDoc;
-}
-
-export interface UserDoc extends mongoose.Document {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  createdAt: Date;
-  updatedAt: Date;
-  passwordChangedAt: Date | number;
-  passwordResetToken: string | undefined;
-  passwordResetExpires: Date | undefined;
-  changedPasswordAfter(JWTTimestamp: number): boolean;
-  createPasswordResetToken(): string;
-}
+export type UserResponse = {
+  message: string;
+  user: User;
+  token: string;
+};

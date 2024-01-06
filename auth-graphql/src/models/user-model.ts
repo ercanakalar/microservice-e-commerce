@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
+import crypto from 'crypto';
 
-import { UserAttrs, UserModal, UserDoc } from '../types/userModalType';
+import { PasswordManager } from '../services';
+import { UserAttrs, UserDoc, UserModal } from '../types/userDBModelTypes';
 
 const userSchema = new mongoose.Schema(
   {
@@ -55,6 +57,48 @@ const userSchema = new mongoose.Schema(
   }
 );
 
+userSchema.pre('save', async function (done) {
+  if (this.isModified('password')) {
+    const hashed = await PasswordManager.toHash(this.get('password'));
+    this.set('password', hashed);
+  }
+  done();
+});
+
+userSchema.pre('save', async function (done) {
+  if (this.isModified('confirmPassword')) {
+    const hashed = await PasswordManager.toHash(this.get('confirmPassword'));
+    this.set('confirmPassword', hashed);
+  }
+  done();
+});
+
+userSchema.methods.changedPasswordAfter = function (JWTTimestamp: number) {
+  if (this.passwordChangedAt) {
+    const changedTimestamp = Math.floor(
+      this.passwordChangedAt.getTime() / 1000
+    );
+
+    return JWTTimestamp < changedTimestamp;
+  }
+  return false;
+};
+
+userSchema.methods.createPasswordResetToken = function () {
+  const resetToken = crypto.randomBytes(32).toString('hex');
+
+  this.passwordResetToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
+
+  // console.log({ resetToken }, this.passwordResetToken);
+
+  this.passwordResetExpires = Date.now() + 30 * 1000;
+
+  return resetToken;
+};
+
 userSchema.statics.build = (attrs: UserAttrs) => {
   return new User(attrs);
 };
@@ -62,32 +106,3 @@ userSchema.statics.build = (attrs: UserAttrs) => {
 const User = mongoose.model<UserDoc, UserModal>('User', userSchema);
 
 export { User };
-
-
-// import {
-//   graphql,
-//   GraphQLSchema,
-//   GraphQLObjectType,
-//   GraphQLString,
-// } from 'graphql';
-
-// const userSchema: GraphQLSchema = new GraphQLSchema({
-//   query: new GraphQLObjectType({
-//     name: 'User',
-//     fields: {
-//       firstName: { type: GraphQLString },
-//       lastName: { type: GraphQLString },
-//       email: { type: GraphQLString },
-//       password: { type: GraphQLString },
-//       confirmPassword: { type: GraphQLString },
-//       createdAt: { type: GraphQLString },
-//       updateAt: { type: GraphQLString },
-//       passwordChangedAt: { type: GraphQLString },
-//       passwordResetToken: { type: GraphQLString },
-//       passwordResetExpires: { type: GraphQLString },
-//       active: { type: GraphQLString },      
-//     },
-//   }),
-// });
-
-// export default userSchema;

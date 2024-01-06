@@ -5,9 +5,8 @@ import { User } from '../models/user-model';
 import { PasswordManager } from '../services';
 import { BadRequestError } from '../errors';
 
-const signUp = async (req: Request, res: Response) => {
-  const { firstName, lastName, email, password, confirmPassword } = req.body;
-
+const signUp = async (args: any,context:any) => {
+  const { firstName, lastName, email, password, confirmPassword } = args;
   const existingUser = await User.findOne({ email });
 
   if (existingUser) {
@@ -32,7 +31,7 @@ const signUp = async (req: Request, res: Response) => {
   });
   await newUser.save();
 
-  const userJwt: Jwt | string = jwt.sign(
+  const userJwt = jwt.sign(
     {
       id: newUser.id,
       email: newUser.email,
@@ -43,11 +42,9 @@ const signUp = async (req: Request, res: Response) => {
     }
   );
 
-  req.session = {
-    jwt: userJwt,
-  };
+  context.res.cookie('user', userJwt, { httpOnly: true });
 
-  res.status(201).send({
+  return {
     message: 'You have successfully registered.',
     user: {
       id: newUser.id,
@@ -56,7 +53,7 @@ const signUp = async (req: Request, res: Response) => {
       email: newUser.email,
     },
     token: userJwt,
-  });
+  };
 };
 
 export default signUp;

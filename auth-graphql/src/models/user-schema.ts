@@ -1,47 +1,37 @@
-import { buildSchema } from 'graphql';
+import { gql } from 'apollo-server-express';
 
-const graphqlSchema = buildSchema(`
+const typeDefs = gql`
     type User {
-        id: ID!
-        firstName: String!
-        lastName: String!
-        email: String!
-        password: String!
-        confirmPassword: String!
-        createdAt: String!
-        updatedAt: String!
-        passwordChangedAt: String!
-        passwordResetToken: String!
-        passwordResetExpires: String!
-        active: Boolean!
+        id: ID
+        firstName: String
+        lastName: String
+        email: String
     }
     
     input UserInput {
-        firstName: String!
-        lastName: String!
-        email: String!
-        password: String!
-        confirmPassword: String!
-        createdAt: String!
-        updatedAt: String!
-        passwordChangedAt: String!
-        passwordResetToken: String!
-        passwordResetExpires: String!
-        active: Boolean!
+        firstName: String
+        lastName: String
+        email: String
+        password: String
+        confirmPassword: String
     }
-    
-    type RootQuery {
-        users: [User!]!
-    }
-    
-    type RootMutation {
-        createUser(userInput: UserInput): User
-    }
-    
-    schema {
-        query: RootQuery
-        mutation: RootMutation
-    }
-`);
 
-export default graphqlSchema;
+    type SignUpResponse {
+        message: String
+        user: User
+        token: String
+    }
+    
+    type Mutation {
+        signUp(firstName: String, lastName: String, email: String, password: String, confirmPassword: String): SignUpResponse
+        signIn(email: String, password: String): SignUpResponse
+        signOut: String
+    }
+
+    type Query {
+        getUserById(userId: ID): User
+        getAllUsers: [User]
+    }
+`;
+
+export default typeDefs;

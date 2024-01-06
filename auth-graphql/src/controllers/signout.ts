@@ -1,9 +1,7 @@
-import { Request, Response } from 'express';
-
-const signOut = (req: Request, res: Response) => {
-  req.session = null;
-
-  res.status(200).send({});
+const signOut = async (context: any) => {
+  context.req.headers.cookie = null;
+  context.res.clearCookie('user');
+  return 'User signed out successfully!';
 };
 
 export default signOut;

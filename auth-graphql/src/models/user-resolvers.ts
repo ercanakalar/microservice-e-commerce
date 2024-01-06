@@ -1,35 +1,26 @@
+import { signIn, signOut, signUp } from '../controllers';
 import { User } from './user-model';
 
 const resolvers = {
   Query: {
-    users: async () => {
+    getAllUsers: async () => {
       const users = await User.find();
       return users;
     },
-    user: async (parent: any, args: any) => {
+    getUserById: async (parent: any, args: any) => {
       const user = await User.findById(args.id);
       return user;
     },
   },
   Mutation: {
-    createUser: async (parent: any, args: any) => {
-      const newUser = User.build({
-        firstName: args.firstName,
-        lastName: args.lastName,
-        email: args.email,
-        password: args.password,
-        confirmPassword: args.confirmPassword,
-      });
-      await newUser.save();
-      return newUser;
+    signUp: async (_: any, args: any, context: any) => {
+      return await signUp(args, context);
     },
-    updateUser: async (parent: any, args: any) => {
-      const user = await User.findByIdAndUpdate(args.id, args, { new: true });
-      return user;
+    signIn: async (_: any, args: any, context: any) => {
+      return await signIn(args, context);
     },
-    deleteUser: async (parent: any, args: any) => {
-      const user = await User.findByIdAndDelete(args.id);
-      return user
+    signOut: async (_: any, args: any, context: any) => {
+      return signOut(context);
     },
   },
 };
