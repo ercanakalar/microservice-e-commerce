@@ -6,7 +6,7 @@ import { BadRequestError } from '../errors';
 import { UserSignIn } from '../types/userModalType';
 import { User } from '../models/user-model';
 
-const signIn = async (args: UserSignIn,context:any) => {
+const signIn = async (args: UserSignIn, context: any) => {
   const { email, password } = args;
 
   const existingUser = await User.findOne({ email });
@@ -22,15 +22,15 @@ const signIn = async (args: UserSignIn,context:any) => {
     throw new BadRequestError('Wrong password, try again.');
   }
 
+  existingUser.expireToken = await PasswordManager.hashExpireToken();
+  await existingUser.save();
+
   const userJwt: Jwt | string = jwt.sign(
     {
       id: existingUser.id,
       email: existingUser.email,
     },
     process.env.JWT_KEY!,
-    {
-      expiresIn: '1m',
-    }
   );
 
   context.res.cookie('user', userJwt, { httpOnly: true });

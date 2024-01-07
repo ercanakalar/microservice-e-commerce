@@ -9,6 +9,7 @@ export interface UserAttrs {
   passwordResetToken?: string | undefined;
   passwordResetExpires?: Date | undefined;
   passwordChangedAt?: Date | undefined;
+  expireToken: string;
 }
 
 export interface UserModal extends mongoose.Model<UserDoc> {
@@ -26,6 +27,8 @@ export interface UserDoc extends mongoose.Document {
   passwordChangedAt: Date | number;
   passwordResetToken: string | undefined;
   passwordResetExpires: Date | undefined;
+  expireToken: string;
   changedPasswordAfter(JWTTimestamp: number): boolean;
   createPasswordResetToken(): string;
+  createExpireToken(): string;
 }

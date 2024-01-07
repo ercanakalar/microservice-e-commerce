@@ -18,16 +18,19 @@ import {
   resetPassword,
   updatePassword,
 } from '../controllers';
+import resolvers from '../models/user-resolvers';
 
 const router = express.Router();
 
-router.post('/signup', signUpValidator, validateRequest, signUp);
-router.post('/signin', signInValidator, validateRequest, signIn);
-router.post('/signout', signOut);
-router.get('/currentuser', currentUserMiddleware, requireAuth, currentUser);
+router.post('/signup', signUpValidator, validateRequest, resolvers.Mutation.signUp);
+router.post('/signin', signInValidator, validateRequest, resolvers.Mutation.signIn);
+router.post('/signout', resolvers.Mutation.signOut);
+router.get('/currentuser', resolvers.Query.currentUser);
 
 router.post('/forgot-password', forgotPasswordValidation,forgotPassword);
 router.patch('/reset-password/:token', resetPassword);
+
+router.get('/', resolvers.Query.getAllUsers)
 
 router.use(protect);
 

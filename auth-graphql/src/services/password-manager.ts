@@ -1,5 +1,6 @@
 import crypto, { scrypt, randomBytes } from 'crypto';
 import { promisify } from 'util';
+import jwt, { Jwt } from 'jsonwebtoken';
 
 const scryptAsync = promisify(scrypt);
 
@@ -20,5 +21,29 @@ export class PasswordManager {
 
   static async isMatchPasswords(password: string, confirmPassword: string) {
     return password === confirmPassword;
+  }
+
+  static async hashExpireToken() {
+    const time = Date.now() + Number(process.env.USER_EXPIRES_IN!);
+    // const time = Date.now() + 1000;
+    const expireToken = jwt.sign(
+      {
+        time,
+      },
+      process.env.JWT_KEY!
+    );
+    return expireToken;
+  }
+
+  static async isExpired(userExpiredToken: string) {
+    const hashedToken: any = jwt.decode(userExpiredToken);
+    const time = hashedToken.time;
+    const date = new Date(time);
+    const now = Date.now();
+    if (now < date.getTime()) {
+      return false
+    } else {
+      return true
+    }
   }
 }

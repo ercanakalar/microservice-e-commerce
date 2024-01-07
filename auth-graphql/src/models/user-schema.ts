@@ -8,7 +8,7 @@ const typeDefs = gql`
         email: String
     }
     
-    input UserInput {
+    type UserInput {
         firstName: String
         lastName: String
         email: String
@@ -16,9 +16,20 @@ const typeDefs = gql`
         confirmPassword: String
     }
 
+    type CurrentUser {
+        id: ID
+        email: String
+    }
+
     type SignUpResponse {
         message: String
         user: User
+        token: String
+    }
+
+    type CurrentUserResponse {
+        message: String
+        user: CurrentUser
         token: String
     }
     
@@ -31,6 +42,7 @@ const typeDefs = gql`
     type Query {
         getUserById(userId: ID): User
         getAllUsers: [User]
+        currentUser: CurrentUserResponse
     }
 `;
 

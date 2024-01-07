@@ -12,7 +12,7 @@ const forgotPassword = async (req: Request, res: Response) => {
     throw new BadRequestError('User not found');
   }
 
-  const resetToken = await findUser.createPasswordResetToken();
+  const resetToken = findUser.createPasswordResetToken();
 
   await findUser.save({ validateBeforeSave: false });
 

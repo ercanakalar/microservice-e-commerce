@@ -1,8 +1,11 @@
 import mongoose from 'mongoose';
 import crypto from 'crypto';
+import * as dotenv from 'dotenv';
 
 import { PasswordManager } from '../services';
 import { UserAttrs, UserDoc, UserModal } from '../types/userDBModelTypes';
+
+dotenv.config();
 
 const userSchema = new mongoose.Schema(
   {
@@ -31,15 +34,22 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
     createdAt: {
+      // When user was created
       type: Date,
     },
     updatedAt: {
+      // When user was updated
       type: Date,
     },
-    passwordChangedAt: Date,
-    passwordResetToken: String,
-    passwordResetExpires: Date,
+    passwordChangedAt: Date, // When password was changed
+    passwordResetToken: String, // Token to reset password
+    passwordResetExpires: Date, // When token to reset password expires
+    expireToken: {
+      // When token time expires
+      type: String,
+    },
     active: {
+      // If user is active
       type: Boolean,
       default: true,
       select: false,
@@ -47,7 +57,7 @@ const userSchema = new mongoose.Schema(
   },
   {
     toJSON: {
-      transform(doc, ret) {
+      transform(doc, ret: any) {
         ret.id = ret._id;
         delete ret._id;
         delete ret.password;
@@ -62,13 +72,10 @@ userSchema.pre('save', async function (done) {
     const hashed = await PasswordManager.toHash(this.get('password'));
     this.set('password', hashed);
   }
-  done();
-});
-
-userSchema.pre('save', async function (done) {
   if (this.isModified('confirmPassword')) {
     const hashed = await PasswordManager.toHash(this.get('confirmPassword'));
     this.set('confirmPassword', hashed);
+    this.set('createdAt', Date.now());
   }
   done();
 });
@@ -85,18 +92,16 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp: number) {
 };
 
 userSchema.methods.createPasswordResetToken = function () {
-  const resetToken = crypto.randomBytes(32).toString('hex');
+  const passwordResetToken = crypto.randomBytes(32).toString('hex');
 
   this.passwordResetToken = crypto
     .createHash('sha256')
-    .update(resetToken)
+    .update(passwordResetToken)
     .digest('hex');
 
-  // console.log({ resetToken }, this.passwordResetToken);
+  this.passwordResetExpires = Date.now() + process.env.RESET_PASSWORD_EXPIRES_IN!; // 5 minutes
 
-  this.passwordResetExpires = Date.now() + 30 * 1000;
-
-  return resetToken;
+  return passwordResetToken;
 };
 
 userSchema.statics.build = (attrs: UserAttrs) => {

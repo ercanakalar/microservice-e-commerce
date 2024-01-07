@@ -13,7 +13,7 @@ import typeDefs from './models/user-schema';
 import resolvers from './models/user-resolvers';
 import { signUpRouter } from './routes/userRoutes';
 import { NotFoundError } from './errors';
-import { errorHandler } from './middlewares';
+import { currentUserMiddleware, errorHandler } from './middlewares';
 
 class App {
   public app: express.Application;
@@ -25,7 +25,7 @@ class App {
     this.httpServer = http.createServer(this.app);
   }
 
-  private middleware(): void {
+  public middleware(): void {
     this.app.set('trust proxy', true);
     this.app.use(json());
     this.app.use(
@@ -53,7 +53,7 @@ class App {
         ApolloServerPluginDrainHttpServer({ httpServer: this.httpServer }),
       ],
     });
-
+    
     const { url } = await startStandaloneServer(this.server, {
       context: async ({ req, res }) => ({ req, res }),
       listen: { port: 4000, path: '/api/users' },

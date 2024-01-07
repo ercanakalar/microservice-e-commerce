@@ -3,6 +3,8 @@ import jwt from 'jsonwebtoken';
 
 import { UserPayload } from '../types/userPayload';
 import { BadRequestError } from '../errors';
+import { GraphQLError } from 'graphql';
+import { User } from '../models/user-model';
 
 declare global {
   namespace Express {
@@ -17,17 +19,28 @@ export const currentUserMiddleware = async (
   res: Response,
   next: NextFunction
 ) => {
-  console.log(req.session?.jwt, 'req.session?.jwt');
-  if (!req.session?.jwt) {
+  if (!req.headers.cookie) {
     throw new BadRequestError('Not authorized');
   }
   try {
+    const token = req.headers.cookie.split('=')[1];
     const payload = jwt.verify(
-      req.session.jwt,
+      token,
       process.env.JWT_KEY!
     ) as UserPayload;
 
-    req.currentUser = payload;
+
+    const user = await User.findById(payload.id);
+  
+    if (!user) {
+      throw new BadRequestError('User not found!');
+    }
+
+    req.currentUser = {
+      id: user.id,
+      email: user.email,
+      expireToken: user.expireToken,
+    };
 
     next();
   } catch (error) {}

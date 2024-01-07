@@ -28,6 +28,7 @@ const signUp = async (args: any,context:any) => {
     email,
     password,
     confirmPassword,
+    expireToken: await PasswordManager.hashExpireToken(),
   });
   await newUser.save();
 
