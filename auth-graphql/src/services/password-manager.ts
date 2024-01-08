@@ -24,8 +24,8 @@ export class PasswordManager {
   }
 
   static async hashExpireToken() {
-    const time = Date.now() + Number(process.env.USER_EXPIRES_IN!);
-    // const time = Date.now() + 1000;
+    // const time = Date.now() + process.env.USER_EXPIRES_IN!;
+    const time = Date.now() + 60 * 1000;
     const expireToken = jwt.sign(
       {
         time,

@@ -7,26 +7,16 @@ const typeDefs = gql`
         lastName: String
         email: String
     }
-    
-    type UserInput {
-        firstName: String
-        lastName: String
-        email: String
-        password: String
-        confirmPassword: String
-    }
-
-    type CurrentUser {
-        id: ID
-        email: String
-    }
-
     type SignUpResponse {
         message: String
         user: User
         token: String
     }
-
+    
+    type CurrentUser {
+        id: ID
+        email: String
+    }
     type CurrentUserResponse {
         message: String
         user: CurrentUser
@@ -37,6 +27,7 @@ const typeDefs = gql`
         signUp(firstName: String, lastName: String, email: String, password: String, confirmPassword: String): SignUpResponse
         signIn(email: String, password: String): SignUpResponse
         signOut: String
+        updatePassword(currentPassword: String, newPassword: String, confirmNewPassword: String): String
     }
 
     type Query {

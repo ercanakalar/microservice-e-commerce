@@ -3,20 +3,13 @@ import express from 'express';
 import { signInValidator, signUpValidator ,forgotPasswordValidation} from '../validations';
 
 import {
-  requireAuth,
   validateRequest,
-  currentUserMiddleware,
 } from '../middlewares';
 
 import {
-  currentUser,
-  signOut,
   protect,
-  signUp,
-  signIn,
   forgotPassword,
   resetPassword,
-  updatePassword,
 } from '../controllers';
 import resolvers from '../models/user-resolvers';
 
@@ -32,8 +25,6 @@ router.patch('/reset-password/:token', resetPassword);
 
 router.get('/', resolvers.Query.getAllUsers)
 
-router.use(protect);
-
-router.patch('/update-password', updatePassword);
+router.patch('/update-password', resolvers.Mutation.updatePassword);
 
 export { router as signUpRouter };

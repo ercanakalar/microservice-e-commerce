@@ -3,8 +3,8 @@ import jwt from 'jsonwebtoken';
 
 import { UserPayload } from '../types/userPayload';
 import { BadRequestError } from '../errors';
-import { GraphQLError } from 'graphql';
 import { User } from '../models/user-model';
+import { ApolloError } from 'apollo-server-express';
 
 declare global {
   namespace Express {
@@ -20,7 +20,7 @@ export const currentUserMiddleware = async (
   next: NextFunction
 ) => {
   if (!req.headers.cookie) {
-    throw new BadRequestError('Not authorized');
+    throw new ApolloError('Not authorized');
   }
   try {
     const token = req.headers.cookie.split('=')[1];
@@ -33,9 +33,9 @@ export const currentUserMiddleware = async (
     const user = await User.findById(payload.id);
   
     if (!user) {
-      throw new BadRequestError('User not found!');
+      throw new ApolloError('User not found!');
     }
-
+    
     req.currentUser = {
       id: user.id,
       email: user.email,

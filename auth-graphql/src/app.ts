@@ -7,13 +7,13 @@ import express from 'express';
 import http from 'http';
 import cors from 'cors';
 import cookieSession from 'cookie-session';
-import bodyParser, { json } from 'body-parser';
+import { json } from 'body-parser';
 
 import typeDefs from './models/user-schema';
 import resolvers from './models/user-resolvers';
 import { signUpRouter } from './routes/userRoutes';
 import { NotFoundError } from './errors';
-import { currentUserMiddleware, errorHandler } from './middlewares';
+import { errorHandler } from './middlewares';
 
 class App {
   public app: express.Application;
@@ -51,9 +51,11 @@ class App {
       resolvers: resolvers,
       plugins: [
         ApolloServerPluginDrainHttpServer({ httpServer: this.httpServer }),
+
       ],
+      status400ForVariableCoercionErrors: true,
     });
-    
+
     const { url } = await startStandaloneServer(this.server, {
       context: async ({ req, res }) => ({ req, res }),
       listen: { port: 4000, path: '/api/users' },

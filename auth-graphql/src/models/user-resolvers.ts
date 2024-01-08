@@ -1,4 +1,4 @@
-import { currentUser, signIn, signOut, signUp } from '../controllers';
+import { currentUser, protect, signIn, signOut, signUp, updatePassword } from '../controllers';
 import { User } from './user-model';
 import { currentUserMiddleware } from '../middlewares';
 
@@ -27,6 +27,10 @@ const resolvers = {
     signOut: async (_: any, args: any, context: any) => {
       return signOut(context);
     },
+    updatePassword: async (_: any, args: any, context: any) => {
+      await protect(context.req, context.res, () => {});
+      return await updatePassword(context.req, context.res, args)
+    }
   },
 };
 

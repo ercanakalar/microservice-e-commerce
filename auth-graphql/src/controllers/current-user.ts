@@ -1,16 +1,17 @@
 import { PasswordManager } from '../services';
 import { BadRequestError } from '../errors';
+import { ApolloError } from 'apollo-server-express';
 
 const currentUser = async (context: any) => {
-  if(!context.req.currentUser?.expireToken) {
-    throw new BadRequestError('Please sign in again!');
+  if(!context.req.currentUser.expireToken) {
+    throw new ApolloError('Please sign in again!');
   }
   const isExpired = await PasswordManager.isExpired(
-    context.req.currentUser?.expireToken
+    context.req.currentUser.expireToken
   );
 
   if (isExpired) {
-    throw new BadRequestError('Please sign in again!');
+    throw new ApolloError('Please sign in again!');
   }
 
   return {

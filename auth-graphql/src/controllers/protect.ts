@@ -6,13 +6,12 @@ import { BadRequestError } from '../errors';
 
 const protect = async (req: Request, res: Response, next: NextFunction) => {
   // 1) Getting token and check of it's there
-  let token = req.session?.jwt;
-
-  if (!token) {
+  if (!req.headers.cookie) {
     throw new BadRequestError(
       'You are not logged in! Please log in to get access.'
     );
   }
+  let token = req.headers.cookie.split('=')[1];
 
   // 2) Verification token
   const decoded: {
@@ -32,7 +31,7 @@ const protect = async (req: Request, res: Response, next: NextFunction) => {
   }
 
   // 4) Check if user changed password after the token was issued
-  const isPasswordChanged = await currentUser.changedPasswordAfter(decoded.iat);
+  const isPasswordChanged = currentUser.changedPasswordAfter(decoded.iat);
   if (isPasswordChanged) {
     throw new BadRequestError(
       'User recently changed password! Please log in again.'
