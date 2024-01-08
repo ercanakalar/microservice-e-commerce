@@ -1,5 +1,6 @@
 export interface UserPayload {
   id: string;
   email: string;
-  expireToken?: string;
+  expireToken: string;
+  iat: number;
 }

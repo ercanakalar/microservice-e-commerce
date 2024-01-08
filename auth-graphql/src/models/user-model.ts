@@ -44,7 +44,6 @@ const userSchema = new mongoose.Schema(
     passwordChangedAt: {
       // When password was changed
       type: Date,
-      default: Date.now(),
     },
     passwordResetToken: {
       // Token to reset password
@@ -85,16 +84,16 @@ userSchema.pre('save', async function (done) {
   if (this.isModified('confirmPassword')) {
     const hashed = await PasswordManager.toHash(this.get('confirmPassword'));
     this.set('confirmPassword', hashed);
-    this.set('createdAt', Date.now());
+    let newDate = new Date();
+    newDate.setHours(newDate.getHours() + 3, newDate.getMinutes());
+    this.set('createdAt', newDate);
   }
   done();
 });
 
 userSchema.methods.changedPasswordAfter = function (JWTTimestamp: number) {
-  const loggedAt = JWTTimestamp * 1000;
-  const oldPasswordChangedAt = Math.floor(
-    this.get('passwordChangedAt').getTime()
-  );
+  const loggedAt = new Date(JWTTimestamp + 3 * 60 * 60 * 1000).getTime();
+  const oldPasswordChangedAt = new Date(this.get('passwordChangedAt')).getTime()
 
   if (oldPasswordChangedAt > loggedAt) {
     return true;
@@ -110,7 +109,8 @@ userSchema.methods.createPasswordResetToken = function () {
     .update(passwordResetToken)
     .digest('hex');
 
-  this.passwordResetExpires = Date.now() + process.env.RESET_PASSWORD_EXPIRES_IN!; // 5 minutes
+  this.passwordResetExpires =
+    Date.now() + process.env.RESET_PASSWORD_EXPIRES_IN!; // 5 minutes
 
   return passwordResetToken;
 };

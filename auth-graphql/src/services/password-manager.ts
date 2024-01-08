@@ -23,9 +23,22 @@ export class PasswordManager {
     return password === confirmPassword;
   }
 
+  static isUserChangedPasswordAfterTokenIssued(
+    JWTTimeStamp: number,
+    userChangePasswordTime: number
+  ) {
+    const loggedAt = new Date(JWTTimeStamp + 3 * 60 * 60 * 1000).getTime();
+    if (loggedAt < new Date(userChangePasswordTime).getTime()) {
+      return true;
+    }
+    return false;
+  }
+
   static async hashExpireToken() {
-    // const time = Date.now() + process.env.USER_EXPIRES_IN!;
-    const time = Date.now() + 60 * 1000;
+    let newDate = new Date();
+    newDate.setHours(newDate.getHours() + 168, newDate.getMinutes());
+    const time = new Date(newDate).getTime();
+
     const expireToken = jwt.sign(
       {
         time,
@@ -38,12 +51,20 @@ export class PasswordManager {
   static async isExpired(userExpiredToken: string) {
     const hashedToken: any = jwt.decode(userExpiredToken);
     const time = hashedToken.time;
+
     const date = new Date(time);
     const now = Date.now();
     if (now < date.getTime()) {
-      return false
+      return false;
     } else {
-      return true
+      return true;
     }
+  }
+
+  static async newChangePasswordAt() {
+    let newDate = new Date();
+    newDate.setHours(newDate.getHours() + 3, newDate.getMinutes());
+    const time = new Date(newDate).getTime();
+    return time
   }
 }

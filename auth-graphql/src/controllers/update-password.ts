@@ -21,8 +21,8 @@ const updatePassword = async (req: Request, res: Response, args: { currentPasswo
     if (newPassword !== confirmNewPassword) {
         throw new BadRequestError('Passwords do not match');
     }
-
-    await User.findByIdAndUpdate({ _id: userId }, { password: await PasswordManager.toHash(newPassword), confirmPassword: await PasswordManager.toHash(newPassword) });
+    
+    await User.findByIdAndUpdate({ _id: userId }, { password: await PasswordManager.toHash(newPassword), confirmPassword: await PasswordManager.toHash(newPassword), passwordChangedAt: await PasswordManager.newChangePasswordAt() });
 
     return 'Password updated successfully!';
 };

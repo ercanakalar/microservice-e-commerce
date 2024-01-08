@@ -31,7 +31,7 @@ const protect = async (req: Request, res: Response, next: NextFunction) => {
   }
 
   // 4) Check if user changed password after the token was issued
-  const isPasswordChanged = currentUser.changedPasswordAfter(decoded.iat);
+  const isPasswordChanged = currentUser.changedPasswordAfter(decoded.iat * 1000);
   if (isPasswordChanged) {
     throw new BadRequestError(
       'User recently changed password! Please log in again.'
