@@ -32,13 +32,13 @@ export const currentUserMiddleware = async (
   }
 
   const userChangePasswordTime = new Date(user.passwordChangedAt).getTime();
-  const isUserChangedPasswordAfterTokenIssued =
+  const isUserChangedPasswordAfterLogged =
     PasswordManager.isUserChangedPasswordAfterTokenIssued(
       payload.iat * 1000,
       userChangePasswordTime
     );
 
-  if (isUserChangedPasswordAfterTokenIssued) {
+  if (isUserChangedPasswordAfterLogged) {
     throw new BadRequestError(
       'User recently changed password! Please log in again.'
     );

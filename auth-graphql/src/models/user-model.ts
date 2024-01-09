@@ -93,7 +93,9 @@ userSchema.pre('save', async function (done) {
 
 userSchema.methods.changedPasswordAfter = function (JWTTimestamp: number) {
   const loggedAt = new Date(JWTTimestamp + 3 * 60 * 60 * 1000).getTime();
-  const oldPasswordChangedAt = new Date(this.get('passwordChangedAt')).getTime()
+  const oldPasswordChangedAt = new Date(
+    this.get('passwordChangedAt')
+  ).getTime();
 
   if (oldPasswordChangedAt > loggedAt) {
     return true;
@@ -109,8 +111,10 @@ userSchema.methods.createPasswordResetToken = function () {
     .update(passwordResetToken)
     .digest('hex');
 
-  this.passwordResetExpires =
-    Date.now() + process.env.RESET_PASSWORD_EXPIRES_IN!; // 5 minutes
+  let newDate = new Date();
+  newDate.setHours(newDate.getHours() + 3, newDate.getMinutes() + 5);
+  const time = new Date(newDate).getTime();
+  this.set('passwordResetExpires', time);
 
   return passwordResetToken;
 };

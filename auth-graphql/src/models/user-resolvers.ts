@@ -1,6 +1,14 @@
-import { currentUser, protect, signIn, signOut, signUp, updatePassword } from '../controllers';
+import {
+  currentUser,
+  forgotPassword,
+  resetPassword,
+  signIn,
+  signOut,
+  signUp,
+  updatePassword,
+} from '../controllers';
 import { User } from './user-model';
-import { currentUserMiddleware } from '../middlewares';
+import { currentUserMiddleware, protect } from '../middlewares';
 
 const resolvers = {
   Query: {
@@ -29,7 +37,13 @@ const resolvers = {
     },
     updatePassword: async (_: any, args: any, context: any) => {
       await protect(context.req, context.res, () => {});
-      return await updatePassword(context.req, context.res, args)
+      return await updatePassword(context.req, context.res, args);
+    },
+    forgotPassword: async (_: any, args: any, context: any) => {
+      return await forgotPassword(args, context);
+    },
+    resetPassword: async (_: any, args: any, context: any) => {
+      return await resetPassword(args, context);
     }
   },
 };

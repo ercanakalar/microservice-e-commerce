@@ -40,8 +40,6 @@ export class Email {
       text: this.url,
     };
 
-    console.log(mailOptions, 'mailOptions');
-
     // 3) Create a transport and send email
     await this.newTransport().sendMail(mailOptions);
   }

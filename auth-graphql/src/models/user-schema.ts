@@ -9,7 +9,7 @@ const typeDefs = gql`
     }
     type SignUpResponse {
         message: String
-        user: User
+        data: User
         token: String
     }
     
@@ -19,7 +19,7 @@ const typeDefs = gql`
     }
     type CurrentUserResponse {
         message: String
-        user: CurrentUser
+        data: CurrentUser
         token: String
     }
     
@@ -28,6 +28,8 @@ const typeDefs = gql`
         signIn(email: String, password: String): SignUpResponse
         signOut: String
         updatePassword(currentPassword: String, newPassword: String, confirmNewPassword: String): String
+        forgotPassword(email: String): String
+        resetPassword(token: String, newPassword: String, confirmNewPassword: String): SignUpResponse
     }
 
     type Query {

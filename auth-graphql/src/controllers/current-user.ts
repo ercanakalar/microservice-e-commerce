@@ -16,7 +16,7 @@ const currentUser = async (context: any) => {
 
   return {
     message: 'You have access!',
-    user: {
+    data: {
       id: context.req.currentUser.id,
       email: context.req.currentUser.email,
     },

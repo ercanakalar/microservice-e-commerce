@@ -2,9 +2,11 @@ import { Request, Response } from 'express';
 import { User } from '../models/user-model';
 import { BadRequestError } from '../errors';
 import { Email } from '../utils/email';
+import { IContext } from '../types/userModalType';
 
-const forgotPassword = async (req: Request, res: Response) => {
-  const { email } = req.body;
+const forgotPassword = async (arg: { email: string }, context: IContext) => {
+  const { req, res } = context;
+  const { email } = arg;
 
   const findUser = await User.findOne({ email });
 
@@ -21,12 +23,9 @@ const forgotPassword = async (req: Request, res: Response) => {
       'host'
     )}/api/users/reset-password/${resetToken}`;
 
-    console.log(resetURL, 'resetURL');
-
     await new Email(findUser, resetURL).sendPasswordReset();
 
     res.status(200).json({
-      status: 'success',
       message: 'Token sent to email!',
       data: {
         resetToken,

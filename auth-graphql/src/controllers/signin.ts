@@ -37,7 +37,7 @@ const signIn = async (args: UserSignIn, context: any) => {
 
   return {
     message: 'User signed in successfully!',
-    user: {
+    data: {
       id: existingUser.id,
       firstName: existingUser.firstName,
       lastName: existingUser.lastName,

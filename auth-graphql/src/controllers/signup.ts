@@ -4,8 +4,9 @@ import jwt, { Jwt } from 'jsonwebtoken';
 import { User } from '../models/user-model';
 import { PasswordManager } from '../services';
 import { BadRequestError } from '../errors';
+import { IArgs, IContext } from '../types/userModalType';
 
-const signUp = async (args: any,context:any) => {
+const signUp = async (args: IArgs, context: IContext) => {
   const { firstName, lastName, email, password, confirmPassword } = args;
   const existingUser = await User.findOne({ email });
 
@@ -47,7 +48,7 @@ const signUp = async (args: any,context:any) => {
 
   return {
     message: 'You have successfully registered.',
-    user: {
+    data: {
       id: newUser.id,
       firstName: newUser.firstName,
       lastName: newUser.lastName,

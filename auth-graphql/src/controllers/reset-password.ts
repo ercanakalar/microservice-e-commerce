@@ -5,16 +5,21 @@ import jwt, { Jwt } from 'jsonwebtoken';
 import { User } from '../models/user-model';
 import { BadRequestError } from '../errors';
 import { PasswordManager } from '../services';
+import { IContext } from '../types/userModalType';
 
-const resetPassword = async (req: Request, res: Response) => {
-  const { password, confirmPassword } = req.body;
+const resetPassword = async (
+  arg: { token: string; newPassword: string; confirmNewPassword: string },
+  context: IContext
+) => {
+  const { req, res } = context;
+  const {token, newPassword, confirmNewPassword } = arg;
 
   // 1) Get user based on the token
   const hashedToken = crypto
     .createHash('sha256')
-    .update(req.params.token)
+    .update(token)
     .digest('hex');
-
+  
   const user = await User.findOne({
     passwordResetToken: hashedToken,
     passwordResetExpires: { $gt: Date.now() },
@@ -27,7 +32,7 @@ const resetPassword = async (req: Request, res: Response) => {
 
   const isNewPasswordSameWithOldPassword = await PasswordManager.compare(
     user.password,
-    password
+    newPassword
   );
 
   if (isNewPasswordSameWithOldPassword) {
@@ -37,15 +42,15 @@ const resetPassword = async (req: Request, res: Response) => {
   }
 
   const passwordMatch = await PasswordManager.isMatchPasswords(
-    password,
-    confirmPassword
+    newPassword,
+    confirmNewPassword
   );
   if (!passwordMatch) {
     throw new BadRequestError('Passwords do not match');
   }
 
-  const hashedPassword = await PasswordManager.toHash(password);
-  const hashedConfirmPassword = await PasswordManager.toHash(confirmPassword);
+  const hashedPassword = await PasswordManager.toHash(newPassword);
+  const hashedConfirmPassword = await PasswordManager.toHash(confirmNewPassword);
 
   user.password = hashedPassword;
   user.confirmPassword = hashedConfirmPassword;
@@ -53,7 +58,7 @@ const resetPassword = async (req: Request, res: Response) => {
   user.passwordResetExpires = undefined;
 
   // 3) Update passwordChangedAt property for the user
-  user.passwordChangedAt = Date.now() - 1000;
+  user.passwordChangedAt = await PasswordManager.newChangePasswordAt();
   await User.findByIdAndUpdate(user.id, user, {
     new: true,
     runValidators: true,
@@ -71,9 +76,9 @@ const resetPassword = async (req: Request, res: Response) => {
     jwt: userJwt,
   };
 
-  res.status(200).send({
+  res.status(200).json({
     message: 'You have successfully reset your password',
-    user: {
+    data: {
       id: user.id,
       firstName: user.firstName,
       lastName: user.lastName,

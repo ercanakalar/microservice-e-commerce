@@ -44,4 +44,4 @@ const protect = async (req: Request, res: Response, next: NextFunction) => {
   next();
 };
 
-export default protect;
+export {protect};

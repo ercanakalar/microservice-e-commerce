@@ -1,4 +1,5 @@
 import { ID } from 'graphql-ws';
+import { Request, Response } from 'express';
 
 export type User = {
   id: ID;
@@ -25,3 +26,22 @@ export type UserResponse = {
   user: User;
   token: string;
 };
+
+export interface IArgs {
+  id?: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  currentPassword: string;
+  newPassword: string;
+  confirmNewPassword: string;
+  message: string;
+  user: User;
+  token: string;
+}
+export interface IContext {
+  req: Request;
+  res: Response;
+}
