@@ -1,0 +1,43 @@
+<div class="flex justify-center flex-wrap bg-auth-background bg-no-repeat bg-cover h-screen signIn-card">
+  <div class="inline justify-center rounded-md container w-[32rem] m-4 bg-white">
+    <form [formGroup]="signInForm" (ngSubmit)="submitForm()" class="flex flex-col items-center gap-6 w-full">
+      <div>
+        <span class="flex justify-center text-4xl font-extrabold font-poppins p-6 pt-12">
+          Sign In
+        </span>
+      </div>
+      <div class="inline-grid gap-16 w-3/4">
+        <app-form-input inputId="email" type="email" placeHolder="E-mail" labelName="Email" icon="fas fa-user"
+          (inputValue)="onChangeInput($event)">
+        </app-form-input>
+        <app-form-input inputId="password" type="password" placeHolder="Password" labelName="Password"
+          icon="fas fa-lock" (inputValue)="onChangeInput($event)"></app-form-input>
+      </div>
+      <div class="flex justify-end w-3/4 text-sm opacity-70">
+        <a routerLink="/auth/forgot-password">Forgot Password?</a>
+      </div>
+      <div class="w-3/4">
+        <div class="wrap-button">
+          <div class="button-bg"></div>
+          <app-submit-button class="w-3/4" title="Sign In"></app-submit-button>
+        </div>
+      </div>
+    </form>
+    <div class="flex flex-col justify-between relative top-[5%] h-[30%]">
+      <div class="flex flex-col justify-center items-center gap-6">
+        <span>Or Sign Up Using</span>
+        <a class="flex h-12 w-12 items-center justify-center rounded-full font-poppins font-bold bg-red-500 text-white"
+          routerLink="/auth/google">
+          <i class="fa-brands fa-google" style="color: #ffffff"></i>
+        </a>
+      </div>
+      <div class="flex flex-col justify-center items-center gap-6">
+        <span>Or Sign Up Using</span>
+        <a class="flex h-full w-full items-center justify-center font-semibold hover:text-indigo-600"
+          routerLink="/auth/signup">
+          SIGN UP
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

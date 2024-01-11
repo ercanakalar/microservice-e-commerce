@@ -1,0 +1,18 @@
+<div class="flex flex-row justify-between p-3 bg-gray-500">
+  <div>
+    <a routerLink="/" class="text-lg font-bold"> GitTix </a>
+  </div>
+  <div *ngIf="!jwtService.isTokenExpired(); else closedMenu">
+    <ul class="flex gap-2">
+        <li>
+          <a routerLink="auth/signup" class="text-lg font-bold"> Sign Up </a>
+        </li>
+        <li>
+          <a routerLink="auth/signin" class="text-lg font-bold"> Sign In </a>
+        </li>
+      </ul>
+  </div>
+  <ng-template #closedMenu>
+      <app-sidebar></app-sidebar>
+  </ng-template>
+</div>
