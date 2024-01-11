@@ -1,33 +1,66 @@
-import express, { Express } from 'express';
-import 'express-async-errors';
-import { json } from 'body-parser';
-import cookieSession from 'cookie-session';
-import cors from 'cors';
+import { ApolloServer } from '@apollo/server';
+import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
+import { startStandaloneServer } from '@apollo/server/standalone';
 
+import express from 'express';
+import http from 'http';
+import cors from 'cors';
+import cookieSession from 'cookie-session';
+import { json } from 'body-parser';
+
+import typeDefs from './models/profile-schema';
+import resolvers from './models/profile-resolvers';
+
+import { profileRouter } from './routes/profileRouter';
 import { NotFoundError } from './errors';
 import { errorHandler } from './middlewares';
 
-import { profileRouter } from './routes/profileRouter';
+class App {
+  public app: express.Application;
+  public httpServer: http.Server;
+  public server: any;
 
-const app: Express = express();
+  constructor() {
+    this.app = express();
+    this.httpServer = http.createServer(this.app);
+  }
 
-app.set('trust proxy', true);
-app.use(json());
-app.use(
-  cookieSession({
-    signed: false,
-    secure: false,
-    // expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 60 * 1000), // 7 days
-  })
-);
-app.use(cors());
+  public middleware(): void {
+    this.app.set('trust proxy', true);
+    this.app.use(json());
+    this.app.use(
+      cookieSession({
+        signed: false,
+        secure: false,
+        // expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 60 * 1000), // 7 days
+      })
+    );
+    this.app.use(cors());
+    this.app.use('/api/profiles', profileRouter);
 
-app.use('/api/profile', profileRouter);
+    this.app.all('*', async () => {
+      throw new NotFoundError();
+    });
+    this.app.use(errorHandler);
+  }
 
+  public async run(): Promise<void> {
+    this.middleware();
+    this.server = new ApolloServer({
+      typeDefs: typeDefs,
+      resolvers: resolvers,
+      plugins: [
+        ApolloServerPluginDrainHttpServer({ httpServer: this.httpServer }),
+      ],
+      status400ForVariableCoercionErrors: true,
+    });
 
-app.all('*', async () => {
-  throw new NotFoundError();
-});
-app.use(errorHandler);
+    const { url } = await startStandaloneServer(this.server, {
+      context: async ({ req, res }) => ({ req, res }),
+      listen: { port: 5000, path: '/api/profiles' },
+    });
+    console.log(`🚀 Server ready at ${url}`);
+  }
+}
 
-export { app };
+export default App;

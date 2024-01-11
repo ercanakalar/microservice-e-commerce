@@ -1,17 +1,10 @@
 import express from 'express';
-
-import {
-  requireAuth,
-  validateRequest,
-  currentUserMiddleware,
-} from '../middlewares';
-
-import createProfile from '../controllers/createProfile';
-import updateProfile from '../controllers/updateProfile';
+import { validateRequest } from '../middlewares';
+import resolvers from '../models/profile-resolvers';
 
 const router = express.Router();
 
 // router.post('/create-profile', requireAuth, validateRequest, createProfile);
-router.put('/update-profile', requireAuth, validateRequest, updateProfile);
+router.use('/update-profile', validateRequest, resolvers.Mutation.createProfile);
 
 export { router as profileRouter };

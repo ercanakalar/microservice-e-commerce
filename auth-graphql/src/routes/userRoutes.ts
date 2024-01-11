@@ -22,4 +22,4 @@ router.use('/', resolvers.Query.getAllUsers)
 
 router.use('/update-password', resolvers.Mutation.updatePassword);
 
-export { router as signUpRouter };
+export { router as userRouter };

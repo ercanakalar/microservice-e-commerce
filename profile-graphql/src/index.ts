@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import * as dotenv from 'dotenv';
 
-import { app } from './app';
+import App from './app';
 
 const start = async () => {
   dotenv.config();
@@ -11,13 +11,11 @@ const start = async () => {
 
   try {
     await mongoose.connect(process.env.MONGO_URI);
+    const app = new App()
+    app.run();
   } catch (error) {
     console.log(error, 'error connecting to db');
   }
 };
-
-app.listen(3000, () => {
-  console.log('Listening Profile Server on port 3000');
-});
 
 start();

@@ -11,7 +11,7 @@ import { json } from 'body-parser';
 
 import typeDefs from './models/user-schema';
 import resolvers from './models/user-resolvers';
-import { signUpRouter } from './routes/userRoutes';
+import { userRouter } from './routes/userRoutes';
 import { NotFoundError } from './errors';
 import { errorHandler } from './middlewares';
 
@@ -36,7 +36,7 @@ class App {
       })
     );
     this.app.use(cors());
-    this.app.use('/api/users', signUpRouter);
+    this.app.use('/api/users', userRouter);
 
     this.app.all('*', async () => {
       throw new NotFoundError();

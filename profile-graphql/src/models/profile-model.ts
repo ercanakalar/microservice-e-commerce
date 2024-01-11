@@ -1,11 +1,6 @@
 import mongoose from 'mongoose';
-import crypto from 'crypto';
+import { ProfileAttrs, ProfileDoc, ProfileModal } from '../types';
 
-import {
-  ProfileAttrs,
-  ProfileModal,
-  ProfileDoc,
-} from '../types/index';
 
 const profileSchema = new mongoose.Schema(
   {
@@ -27,7 +22,6 @@ const profileSchema = new mongoose.Schema(
     },
     photo: {
       type: String,
-      default: 'default.jpg',
     },
     createdAt: {
       type: Date,
@@ -43,7 +37,7 @@ const profileSchema = new mongoose.Schema(
   },
   {
     toJSON: {
-      transform(doc, ret) {
+      transform(doc, ret: any) {
         ret.id = ret._id;
         delete ret._id;
         delete ret.password;
