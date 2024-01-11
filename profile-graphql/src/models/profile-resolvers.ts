@@ -1,4 +1,5 @@
-import createProfile from "../controllers/createProfile";
+import updateProfile from "../controllers/updateProfile";
+import { requireAuth } from "../middlewares";
 import { Profile } from "./profile-model";
 
 const resolvers = {
@@ -8,8 +9,9 @@ const resolvers = {
     }
   },
   Mutation: {
-    createProfile: async (_: any, args: any, context: any) => {
-      return await createProfile();
+    updateProfile: async (_: any, args: any, context: any) => {
+      const currentUser = await requireAuth(context.req);
+      return await updateProfile(currentUser, args, context.req, context.res);
     },
   },
 };

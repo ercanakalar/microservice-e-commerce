@@ -1,10 +1,14 @@
 import { Request, Response } from 'express';
 
-import { Profile } from '../models/profileModel';
-import { BadRequestError } from '../errors';
+import { Profile } from '../models/profile-model';
 
-const updateProfile = async (req: Request, res: Response) => {
-    const { firstName, lastName, email, photo, active } = req.body;
+import { BadRequestError } from '../errors';
+import { ICurrentUserBasicInfo } from '../types/userModalTypes';
+import { IProfile } from '../types/profileModalTypes';
+
+
+const updateProfile = async (currentUser: ICurrentUserBasicInfo, args: IProfile, req: Request, res: Response) => {
+    const { id, email } = currentUser;
 
     if (!email) {
         throw new BadRequestError('Email is required');
@@ -16,7 +20,9 @@ const updateProfile = async (req: Request, res: Response) => {
         throw new BadRequestError('Profile not found');
     }
 
-    await Profile.findOneAndUpdate({ email }, { firstName, lastName, photo, active });
+    await Profile.findOneAndUpdate({ email });
+
+    return 'deneme'
 };
 
 export default updateProfile;

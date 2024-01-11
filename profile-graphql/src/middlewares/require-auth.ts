@@ -1,16 +1,15 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request } from 'express';
 
 import { NotAuthorizedError } from '../errors';
+import { ControlManager } from '../utils';
 
-export const requireAuth = (
-  err: Error,
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  if (req.currentProfile == undefined) {
+export const requireAuth = async (req: Request) => {
+  if (!req.headers.cookie) {
     throw new NotAuthorizedError();
   }
+  const token = req.headers.cookie.split('=')[1];
 
-  next();
+  const currentUser = await ControlManager.verifyToken(token);
+
+  return currentUser;
 };

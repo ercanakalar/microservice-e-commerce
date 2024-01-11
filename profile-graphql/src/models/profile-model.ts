@@ -4,6 +4,10 @@ import { ProfileAttrs, ProfileDoc, ProfileModal } from '../types';
 
 const profileSchema = new mongoose.Schema(
   {
+    userId: {
+      type: String,
+      required: true,
+    },
     firstName: {
       type: String,
       required: true,
@@ -23,16 +27,16 @@ const profileSchema = new mongoose.Schema(
     photo: {
       type: String,
     },
+    active: {
+      type: Boolean,
+      default: true,
+      select: false,
+    },
     createdAt: {
       type: Date,
     },
     updatedAt: {
       type: Date,
-    },
-    active: {
-      type: Boolean,
-      default: true,
-      select: false,
     },
   },
   {

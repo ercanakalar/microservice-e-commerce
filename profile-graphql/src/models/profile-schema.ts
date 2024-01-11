@@ -10,7 +10,7 @@ const typeDefs = gql`
         confirmPassword: String
     }
     type Mutation {
-        createProfile(firstName: String, lastName: String, email: String, password: String, confirmPassword: String): Profile
+        updateProfile: String
     }
 
     type Query {
