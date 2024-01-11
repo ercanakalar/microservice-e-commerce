@@ -33,6 +33,7 @@ const signIn = async (args: UserSignIn, context: any) => {
     process.env.JWT_KEY!,
   );
 
+  // context.res.currentUser('user', userJwt, { httpOnly: true });
   context.res.cookie('user', userJwt, { httpOnly: true });
 
   return {

@@ -52,17 +52,8 @@ const resetPassword = async (
   const hashedPassword = await PasswordManager.toHash(newPassword);
   const hashedConfirmPassword = await PasswordManager.toHash(confirmNewPassword);
 
-  user.password = hashedPassword;
-  user.confirmPassword = hashedConfirmPassword;
-  user.passwordResetToken = undefined;
-  user.passwordResetExpires = undefined;
-
   // 3) Update passwordChangedAt property for the user
-  user.passwordChangedAt = await PasswordManager.newChangePasswordAt();
-  await User.findByIdAndUpdate(user.id, user, {
-    new: true,
-    runValidators: true,
-  });
+  await User.findByIdAndUpdate({ _id: user.id }, { password: hashedPassword, confirmPassword: hashedConfirmPassword, passwordChangedAt: await PasswordManager.newChangePasswordAt(), passwordResetToken: undefined, passwordResetExpires: undefined });
 
   // 4) Log the user in, send JWT
   const userJwt: Jwt | string = jwt.sign(
@@ -72,9 +63,7 @@ const resetPassword = async (
     },
     process.env.JWT_KEY!
   );
-  req.session = {
-    jwt: userJwt,
-  };
+  res.cookie('user', userJwt, { httpOnly: true });
 
   res.status(200).json({
     message: 'You have successfully reset your password',

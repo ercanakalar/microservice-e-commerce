@@ -1,8 +1,7 @@
-import { ID } from 'graphql-ws';
 import { Request, Response } from 'express';
 
 export type User = {
-  id: ID;
+  id: string;
   firstName: string;
   lastName: string;
   email: string;

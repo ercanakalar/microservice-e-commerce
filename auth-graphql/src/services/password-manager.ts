@@ -27,7 +27,7 @@ export class PasswordManager {
     JWTTimeStamp: number,
     userChangePasswordTime: number
   ) {
-    const loggedAt = new Date(JWTTimeStamp + 3 * 60 * 60 * 1000).getTime();
+    const loggedAt = new Date(JWTTimeStamp + 3 * 60 * 60 * 1000).getTime(); // 3 hours added to JWTTimeStamp to match the time zone
     if (loggedAt < new Date(userChangePasswordTime).getTime()) {
       return true;
     }
@@ -36,7 +36,7 @@ export class PasswordManager {
 
   static async hashExpireToken() {
     let newDate = new Date();
-    newDate.setHours(newDate.getHours() + 168, newDate.getMinutes());
+    newDate.setHours(newDate.getHours() + 168, newDate.getMinutes()); // 7 days
     const time = new Date(newDate).getTime();
 
     const expireToken = jwt.sign(
