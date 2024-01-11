@@ -8,24 +8,24 @@ build:
   local:
     push: false
   artifacts:
-    - image: ercanakalar/auth
-      context: auth
+    - image: ercanakalar/auth-graphql
+      context: auth-graphql
       docker:
         dockerfile: Dockerfile
       sync:
         manual:
           - src: 'src/**/*.ts'
             dest: .
-    - image: ercanakalar/profile
-      context: profile
+    - image: ercanakalar/profile-graphql
+      context: profile-graphql
       docker:
         dockerfile: Dockerfile
       sync:
         manual:
           - src: 'src/**/*.ts'
             dest: .
-    - image: ercanakalar/client-react
-      context: client-react
+    - image: ercanakalar/client-react-graphql
+      context: client-react-graphql
       docker:
         dockerfile: Dockerfile
       sync:

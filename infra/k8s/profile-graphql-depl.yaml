@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: profile-graphql-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: profile-graphql
+  template:
+    metadata:
+      labels:
+        app: profile-graphql
+    spec:
+      containers:
+        - name: profile-graphql
+          image: ercanakalar/profile-graphql
+          env:
+            - name: MONGO_URI
+              value: "mongodb+srv://ea:ea123@assessment.vxer5fo.mongodb.net/profile-graphql"
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: profile-graphql-srv
+spec:
+  selector:
+    app: profile-graphql
+  ports:
+    - name: profile-graphql
+      protocol: TCP
+      port: 3000
+      targetPort: 3000

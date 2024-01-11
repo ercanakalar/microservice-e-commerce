@@ -7,20 +7,20 @@ metadata:
     nginx.ingress.kubernetes.io/use-regex: 'true'
 spec:
   rules:
-    - host: ticketing-microservices.org
+    - host: graphql-ecommerce.org
       http:
         paths:
           - path: /api/users/?(.*)
             pathType: ImplementationSpecific
             backend:
               service:
-                name: auth-srv
+                name: auth-graphql-srv
                 port:
                   number: 3000
           - path: /?(.*)
             pathType: ImplementationSpecific
             backend:
               service:
-                name: client-react-srv
+                name: client-react-graphql-srv
                 port:
                   number: 3000

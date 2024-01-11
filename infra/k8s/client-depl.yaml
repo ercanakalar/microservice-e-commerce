@@ -1,30 +1,30 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: client-react-depl
+  name: client-react-graphql-srv-depl
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: client-react
+      app: client-react-graphql-srv
   template:
     metadata:
       labels:
-        app: client-react
+        app: client-react-graphql-srv
     spec:
       containers:
-        - name: client-react
-          image: ercanakalar/client-react
+        - name: client-react-graphql-srv
+          image: ercanakalar/client-react-graphql-srv
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: client-react-srv
+  name: client-react-graphql-srv-srv
 spec:
   selector:
-    app: client-react
+    app: client-react-graphql-srv
   ports:
-    - name: client-react
+    - name: client-react-graphql-srv
       protocol: TCP
       port: 3000
       targetPort: 3000

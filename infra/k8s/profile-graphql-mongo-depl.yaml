@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: profile-graphql-mongo-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: profile-graphql-mongo
+  template:
+    metadata:
+      labels:
+        app: profile-graphql-mongo
+    spec:
+      containers:
+        - name: profile-graphql-mongo
+          image: mongo
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: profile-graphql-mongo-srv
+spec:
+  selector:
+    app: profile-graphql-mongo
+  ports:
+    - name: db
+      protocol: TCP
+      port: 27017
+      targetPort: 27017

@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-graphql-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth-graphql
+  template:
+    metadata:
+      labels:
+        app: auth-graphql
+    spec:
+      containers:
+        - name: auth-graphql
+          image: ercanakalar/auth-graphql
+          env:
+            - name: MONGO_URI
+              value: "mongodb+srv://ea:ea123@assessment.vxer5fo.mongodb.net/auth-graphql"
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-graphql-srv
+spec:
+  selector:
+    app: auth-graphql
+  ports:
+    - name: auth-graphql
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
