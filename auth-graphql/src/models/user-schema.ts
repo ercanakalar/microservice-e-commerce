@@ -1,6 +1,6 @@
-import { gql } from 'apollo-server-express';
+import { buildSchema } from 'graphql';
 
-const typeDefs = gql`
+const typeDefs = buildSchema(`
     type User {
         id: ID
         firstName: String
@@ -37,6 +37,6 @@ const typeDefs = gql`
         getAllUsers: [User]
         currentUser: CurrentUserResponse
     }
-`;
+`);
 
 export default typeDefs;
