@@ -1,12 +1,10 @@
 import { ApolloServer } from '@apollo/server';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import { startStandaloneServer } from '@apollo/server/standalone';
-import { expressMiddleware } from '@apollo/server/express4';
 
 import express from 'express';
 import http from 'http';
 import cors from 'cors';
-import cookieSession from 'cookie-session';
 import { json } from 'body-parser';
 
 import typeDefs from './models/user-schema';
@@ -28,13 +26,6 @@ class App {
   public middleware(): void {
     this.app.set('trust proxy', true);
     this.app.use(json());
-    this.app.use(
-      cookieSession({
-        signed: false,
-        secure: false,
-        // expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 60 * 1000), // 7 days
-      })
-    );
     this.app.use(cors());
     this.app.use('/api/users', userRouter);
 
