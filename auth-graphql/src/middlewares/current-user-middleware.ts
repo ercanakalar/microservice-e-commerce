@@ -22,8 +22,10 @@ export const currentUserMiddleware = async (
   if (!req.headers.cookie) {
     throw new BadRequestError('Not authorized');
   }
-  const token = req.headers.cookie.split('=')[1];
-  const payload = jwt.verify(token, process.env.JWT_KEY!) as UserPayload;
+  const cookie = await PasswordManager.separateCookie(req.headers.cookie);
+  if (!cookie.user) throw new BadRequestError('Not authorized');
+  
+  const payload = jwt.verify(cookie.user, process.env.JWT_KEY!) as UserPayload;
 
   const user = await User.findById(payload.id);
 

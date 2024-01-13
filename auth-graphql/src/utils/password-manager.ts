@@ -1,6 +1,7 @@
 import { scrypt, randomBytes } from 'crypto';
 import { promisify } from 'util';
 import jwt from 'jsonwebtoken';
+import { ICurrentUserCookie } from '../types/cookieTypes';
 
 const scryptAsync = promisify(scrypt);
 
@@ -65,6 +66,22 @@ export class PasswordManager {
     let newDate = new Date();
     newDate.setHours(newDate.getHours() + 3, newDate.getMinutes());
     const time = new Date(newDate).getTime();
-    return time
+    return time;
+  }
+
+  static async separateCookie(cookie: string) {
+    const keyValuePairs = cookie.split('; ').flatMap((pair) => pair.split('='));
+
+    const resultObject: ICurrentUserCookie = {
+      user: undefined,
+      profile: undefined,
+    };
+    for (let i = 0; i < keyValuePairs.length; i += 2) {
+      const key = keyValuePairs[i];
+      const value = keyValuePairs[i + 1];
+      resultObject[key] = value;
+    }
+
+    return resultObject;
   }
 }

@@ -36,6 +36,8 @@ const signUp = async (args: IArgs, context: IContext) => {
   const userJwt = jwt.sign(
     {
       id: newUser.id,
+      firstName: newUser.firstName,
+      lastName: newUser.lastName,
       email: newUser.email,
     },
     process.env.JWT_KEY!,
