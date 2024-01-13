@@ -4,7 +4,7 @@ import jwt, { Jwt } from 'jsonwebtoken';
 
 import { User } from '../models/user-model';
 import { BadRequestError } from '../errors';
-import { PasswordManager } from '../services';
+import { PasswordManager } from '../utils';
 import { IContext } from '../types/userModalType';
 
 const resetPassword = async (

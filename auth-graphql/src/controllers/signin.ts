@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import jwt, { Jwt } from 'jsonwebtoken';
 
-import { PasswordManager } from '../services';
+import { PasswordManager } from '../utils';
 import { BadRequestError } from '../errors';
 import { UserSignIn } from '../types/userModalType';
 import { User } from '../models/user-model';

@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import jwt, { Jwt } from 'jsonwebtoken';
 
 import { User } from '../models/user-model';
-import { PasswordManager } from '../services';
+import { PasswordManager } from '../utils';
 import { BadRequestError } from '../errors';
 import { IArgs, IContext } from '../types/userModalType';
 

@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import { UserPayload } from '../types/userPayload';
 import { BadRequestError } from '../errors';
 import { User } from '../models/user-model';
-import { PasswordManager } from '../services';
+import { PasswordManager } from '../utils';
 
 declare global {
   namespace Express {

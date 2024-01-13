@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import crypto from 'crypto';
 import * as dotenv from 'dotenv';
 
-import { PasswordManager } from '../services';
+import { PasswordManager } from '../utils';
 import { UserAttrs, UserDoc, UserModal } from '../types/userDBModelTypes';
 
 dotenv.config();

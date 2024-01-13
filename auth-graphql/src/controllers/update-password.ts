@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { BadRequestError } from '../errors';
 import { User } from '../models/user-model';
-import { PasswordManager } from '../services';
+import { PasswordManager } from '../utils';
 
 const updatePassword = async (req: Request, res: Response, args: { currentPassword: string, newPassword: string, confirmNewPassword: string }) => {
     const { currentPassword, newPassword, confirmNewPassword } = args;

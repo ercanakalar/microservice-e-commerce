@@ -1,4 +1,4 @@
-import { PasswordManager } from '../services';
+import { PasswordManager } from '../utils';
 import { BadRequestError } from '../errors';
 
 const currentUser = async (context: any) => {
