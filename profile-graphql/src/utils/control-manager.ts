@@ -1,7 +1,4 @@
-import crypto, { scrypt, randomBytes } from 'crypto';
-import { promisify } from 'util';
-
-const scryptAsync = promisify(scrypt);
+import { ICurrentUserCookie } from '../types';
 
 export class ControlManager {
     static async verifyToken(token: string) {
@@ -10,6 +7,22 @@ export class ControlManager {
         const payload = JSON.parse(decodedString);
 
         return payload;
+    }
+
+    static async separateCookie(cookie: string) {
+        const keyValuePairs = cookie.split('; ').flatMap(pair => pair.split('='));
+
+        const resultObject: ICurrentUserCookie = {
+            user: undefined,
+            profile: undefined,
+        };
+        for (let i = 0; i < keyValuePairs.length; i += 2) {
+            const key = keyValuePairs[i];
+            const value = keyValuePairs[i + 1];
+            resultObject[key] = value;
+        }
+
+        return resultObject;
     }
   
 }

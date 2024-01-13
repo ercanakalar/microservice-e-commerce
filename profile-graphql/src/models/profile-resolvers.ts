@@ -1,16 +1,24 @@
-import updateProfile from "../controllers/updateProfile";
-import { requireAuth } from "../middlewares";
-import { Profile } from "./profile-model";
+import createProfile from '../controllers/createProfile';
+import updateProfile from '../controllers/updateProfile';
+import { requireProfile } from '../middlewares/require-profile';
+import { Profile } from './profile-model';
 
 const resolvers = {
   Query: {
     getProfileById: async (parent: any, args: any) => {
       const profile = await Profile.findById(args.id);
-    }
+    },
   },
   Mutation: {
     updateProfile: async (_: any, args: any, context: any) => {
-      const currentUser = await requireAuth(context.req);
+      const { isThereProfile, currentUser }: any = await requireProfile(
+        context.req
+      ); 
+      console.log(isThereProfile,'isThereProfile');
+      
+      if (!isThereProfile) {
+        return await createProfile(currentUser, args, context.req, context.res);
+      }
       return await updateProfile(currentUser, args, context.req, context.res);
     },
   },

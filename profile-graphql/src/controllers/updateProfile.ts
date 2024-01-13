@@ -5,24 +5,48 @@ import { Profile } from '../models/profile-model';
 import { BadRequestError } from '../errors';
 import { ICurrentUserBasicInfo } from '../types/userModalTypes';
 import { IProfile } from '../types/profileModalTypes';
+import jwt, { Jwt } from 'jsonwebtoken';
 
+const updateProfile = async (
+  currentUser: ICurrentUserBasicInfo,
+  args: IProfile,
+  req: Request,
+  res: Response
+) => {
+  const { id } = currentUser;
+  const { firstName, lastName, photo } = args;
 
-const updateProfile = async (currentUser: ICurrentUserBasicInfo, args: IProfile, req: Request, res: Response) => {
-    const { id, email } = currentUser;
+  const findProfile = await Profile.findOne({ userId: id });
 
-    if (!email) {
-        throw new BadRequestError('Email is required');
-    }
+  if (!findProfile) {
+    throw new BadRequestError('Profile not found');
+  }
 
-    const findProfile = await Profile.findOne({ email });
+  await Profile.findOneAndUpdate({userId: id}, { firstName, lastName, photo });
 
-    if (!findProfile) {
-        throw new BadRequestError('Profile not found');
-    }
+  const profileJwt: Jwt | string = jwt.sign(
+    {
+      id: findProfile.id,
+      userId: findProfile.userId,
+      firstName,
+      lastName,
+      photo,
+    },
+    process.env.JWT_KEY!
+  );
 
-    await Profile.findOneAndUpdate({ email });
+  res.cookie('profile', profileJwt, { httpOnly: true });
 
-    return 'deneme'
+  return {
+    message: 'Profile updated successfully!',
+    data: {
+      id: findProfile.id,
+      userId: findProfile.userId,
+      firstName,
+      lastName,
+      photo,
+    },
+  };
 };
 
 export default updateProfile;
